@@ -6,39 +6,38 @@
 /*   By: mabbadi <mabbadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:13:39 by mabbadi           #+#    #+#             */
-/*   Updated: 2023/05/12 18:21:20 by mabbadi          ###   ########.fr       */
+/*   Updated: 2023/05/15 17:57:18 by mabbadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*function_name(int fd, char *buf, char *backup)
+char	*ft_read(int fd, char *buf, char *backup)
 {
-	int		read_line;
+	int		readed;
 	char	*char_temp;
 
-	read_line = 1;
-	while (read_line != '\0')
+	readed = 1;
+	while (readed != '\0')
 	{
-		read_line = read(fd, buf, BUFFER_SIZE);
-		if (read_line == -1)
-			return (0);
-		else if (read_line == 0)
+		readed = read(fd, buf, BUFFER_SIZE);
+		if (readed == -1)
+			return (NULL);
+		else if (readed == 0)
 			break ;
-		buf[read_line] = '\0';
+		buf[readed] = '\0';
 		if (!backup)
 			backup = ft_strdup("");
 		char_temp = backup;
 		backup = ft_strjoin(char_temp, buf);
 		free(char_temp);
-		char_temp = NULL;
 		if (ft_strchr (buf, '\n'))
 			break ;
 	}
 	return (backup);
 }
 
-static char	*extract(char *line)
+char	*extract(char *line)
 {
 	size_t	count;
 	char	*backup;
@@ -62,37 +61,36 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	char		*buf;
-	static char	*backup;
+static char	*backup;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-	{
-		return (0);
-		free(backup);
-	}
+		return (NULL);
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
-		return (0);
-	line = function_name(fd, buf, backup);
-	free(buf);
-	buf = NULL;
-	if (!line)
 		return (NULL);
+	line = ft_read(fd, buf, backup);
+	free(buf);
+	if (!line)
+	{
+		free(backup);
+		backup = NULL;
+		return (NULL);
+	}
 	backup = extract(line);
 	return (line);
 }
 
-int main()
-{
-	int fd;
+// int main()
+// {
+// 	int fd;
 
-	fd = open("foo.txt", O_RDONLY);
-	if (fd < 0) {
-		perror("r1");
-		exit(1);
-	}
+// 	fd = open("read_error.txt", O_RDONLY);
+// 	if (fd < 0) {
+// 		perror("r1");
+// 		exit(1);
+// 	}
 
-	// printf("%zd bytes were read of fd %d.\n", read(fd, c, BUFFER_SIZE), fd);
-	printf("Those bytes are as follows: %s", get_next_line(fd));
+// 	printf("Those bytes are as follows: %s", get_next_line(fd));
 
-	return 0;
-}
+// 	return 0;
+// }

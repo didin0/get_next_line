@@ -6,7 +6,7 @@
 /*   By: mabbadi <mabbadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:13:39 by mabbadi           #+#    #+#             */
-/*   Updated: 2023/05/15 17:57:18 by mabbadi          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:28:53 by mabbadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*ft_read(int fd, char *buf, char *backup)
 {
 	int		readed;
-	char	*char_temp;
+	char	*tmp;
 
 	readed = 1;
 	while (readed != '\0')
@@ -28,9 +28,9 @@ char	*ft_read(int fd, char *buf, char *backup)
 		buf[readed] = '\0';
 		if (!backup)
 			backup = ft_strdup("");
-		char_temp = backup;
-		backup = ft_strjoin(char_temp, buf);
-		free(char_temp);
+		tmp = backup;
+		backup = ft_strjoin(tmp, buf);
+		free(tmp);
 		if (ft_strchr (buf, '\n'))
 			break ;
 	}

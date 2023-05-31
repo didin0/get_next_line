@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabbadi <mabbadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:13:39 by mabbadi           #+#    #+#             */
-/*   Updated: 2023/05/31 16:16:54 by mabbadi          ###   ########.fr       */
+/*   Updated: 2023/05/26 13:52:17 by mabbadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,37 +61,36 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	char		*buf;
-	static char	*backup;
+	static char	*backup[OPEN_MAX];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	line = ft_read(fd, buf, backup);
+	line = ft_read(fd, buf, backup[fd]);
 	free(buf);
 	if (!line)
 	{
-		free(backup);
-		backup = NULL;
+		free(backup[fd]);
+		backup[fd] = NULL;
 		return (NULL);
 	}
-	backup = extract(line);
+	backup[fd] = extract(line);
 	return (line);
 }
 
 // int main()
 // {
 // 	int fd1 = open("read_error.txt", O_RDONLY);
-// 	// int fd2 = open("foo.txt", O_RDONLY);
+// 	int fd2 = open("foo.txt", O_RDONLY);
 // 	int fd;
 // 	int i = 0;
 
-// 	while (i++ < 1)
+// 	while (i++ < 6)
 // 	{
 // 		printf("fd1: %s", get_next_line(fd1));
-
-// 		// printf("fd2: %s", get_next_line(fd2));
+// 		printf("fd2: %s", get_next_line(fd2));
 // 	}
 // 	return 0;
 // }
